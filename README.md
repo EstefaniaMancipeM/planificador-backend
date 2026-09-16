@@ -7,7 +7,6 @@ API REST del proyecto individual de Estefania Mancipe. Fue realizada con Java 17
 - `model/Task.java`: entidad de la tarea.
 - `repository/TaskRepository.java`: acceso a PostgreSQL.
 - `controller/TaskController.java`: operaciones de la API.
-- `config/TaskDataInitializer.java`: agrega las cinco tareas iniciales si la tabla esta vacia.
 - `database/create_database.sql`: instruccion para crear la base de datos.
 
 ## Endpoints

@@ -2,17 +2,27 @@ package com.estefania.planificador.controller;
 
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.estefania.planificador.model.Task;
 import com.estefania.planificador.repository.TaskRepository;
+
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/tasks")
-@CrossOrigin(origins = {"http://127.0.0.1:5500", "http://localhost:5500", "https://estefaniamancipem.github.io"})
 public class TaskController {
+
     private final TaskRepository taskRepository;
 
     public TaskController(TaskRepository taskRepository) {
@@ -32,21 +42,31 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable Long id, @Valid @RequestBody Task updatedTask) {
+    public ResponseEntity<Task> updateTask(
+        @PathVariable Long id,
+        @Valid @RequestBody Task updatedTask
+    ) {
         Optional<Task> optionalTask = taskRepository.findById(id);
-        if (optionalTask.isEmpty()) return ResponseEntity.notFound().build();
+
+        if (optionalTask.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
 
         Task currentTask = optionalTask.get();
         currentTask.setName(updatedTask.getName());
         currentTask.setDescription(updatedTask.getDescription());
         currentTask.setDueDate(updatedTask.getDueDate());
         currentTask.setStatus(updatedTask.getStatus());
+
         return ResponseEntity.ok(taskRepository.save(currentTask));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
-        if (!taskRepository.existsById(id)) return ResponseEntity.notFound().build();
+        if (!taskRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
         taskRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
